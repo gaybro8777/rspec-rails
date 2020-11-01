@@ -24,7 +24,11 @@ module RSpec
 
           def matches?(mailbox)
             @mailbox  = mailbox
-            @receiver = ApplicationMailbox.router.send(:match_to_mailbox, inbound_email)
+            if ApplicationMailbox.router.respond_to?(:mailbox_for)
+              @receiver = ApplicationMailbox.router.mailbox_for(inbound_email)
+            else
+              @receiver = ApplicationMailbox.router.send(:match_to_mailbox, inbound_email)
+            end
 
             @receiver == @mailbox
           end
