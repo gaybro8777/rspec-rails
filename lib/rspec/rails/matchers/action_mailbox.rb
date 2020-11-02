@@ -22,15 +22,20 @@ module RSpec
             @inbound_email = create_inbound_email(message)
           end
 
-          def matches?(mailbox)
-            @mailbox  = mailbox
-            if ApplicationMailbox.router.respond_to?(:mailbox_for)
+          if ApplicationMailbox.router.respond_to?(:mailbox_for)
+            def matches?(mailbox)
+              @mailbox  = mailbox
               @receiver = ApplicationMailbox.router.mailbox_for(inbound_email)
-            else
-              @receiver = ApplicationMailbox.router.send(:match_to_mailbox, inbound_email)
-            end
 
-            @receiver == @mailbox
+              @receiver == @mailbox
+            end
+          else
+            def matches?(mailbox)
+              @mailbox  = mailbox
+              @receiver = ApplicationMailbox.router.send(:match_to_mailbox, inbound_email)
+
+              @receiver == @mailbox
+            end
           end
 
           def failure_message
