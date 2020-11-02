@@ -36,9 +36,6 @@ before_script:
 
 script: "script/run_build 2>&1"
 
-env:
-  - USE_GIT_REPOS=1
-
 matrix:
   include:
     # Rails 6.1 builds >= 2.5
